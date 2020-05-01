@@ -6,7 +6,7 @@ import time
 import json
 
 HOST = '161.35.29.46'
-PORT = 54321
+PORT = 5432
 
 
 class SocketCommunication(object):

@@ -1,8 +1,6 @@
-from xdrlib import Packer
-from flask import Flask, render_template, session, request, jsonify, url_for
-import SocketCommunication
-import thread
-
+from threading import Thread
+from flask import Flask, render_template
+from interfaces import SocketCommunication
 
 app = Flask(__name__)
 
@@ -27,11 +25,13 @@ def design3():
 
 if __name__ == '__main__':
     com = SocketCommunication.SocketCommunication()
-    # thread.start_new_thread(com.update, ())
-    com.update()
+    com_thread = Thread(target=com.update, args=())
+    com_thread.start()
 
-    # app.run(host="0.0.0.0", port=80, debug=True)
-    # thread.start_new_thread(app.run, ("0.0.0.0", 80, True))
+    app.run(host="0.0.0.0", port=80, debug=True)
+    # thread.start_new_thread(app.run, ("0.0.0.0", 80))
+
+    com_thread.join()
 
 
 
