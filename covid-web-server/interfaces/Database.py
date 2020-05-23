@@ -21,9 +21,8 @@ class Database(object):
         for x in self.cursor:
             print(x)
 
-    def createClientTable(self, name):
-        self.cursor.execute("CREATE TABLE %s (id INT AUTO_INCREMENT PRIMARY KEY, date DATE, time TIME, people_counter_data VARCHAR(255))")
-
+    def commit(self):
+        database.commit()
 
     def insetInto(self, table, column, data):
         self.cursor = database.cursor()
@@ -50,7 +49,6 @@ class Database(object):
 
 
     def columns(self, table):
-
         self.cursor.execute("SHOW COLUMNS FROM {table_name};".format(table_name =table))
 
         columns = []
@@ -68,3 +66,67 @@ class Database(object):
         else:
             print("Add column "+name+" to table "+table)
             self.cursor.execute("ALTER TABLE {table_name} ADD COLUMN {column_name} {datatype};".format(table_name=table, column_name=name, datatype=type))
+
+
+
+class Table(object):
+    def __init__(self):
+        self.db = Database()
+        self.cursor = self.db.cursor
+        self.name = str()
+        self.id = 0
+
+
+    def getId(self):
+        self.cursor.execute("SELECT MAX(id) FROM {table_name}".format(table_name=self.name))
+
+        self.id = self.cursor.fetchall()[0]
+
+        return self.id
+
+
+    def exist(self):
+        if self.name in self.db.tables():
+            return True
+        return False
+
+    def create(self, name):
+        self.name = str(name)
+
+        if self.name in self.db.tables():
+            print("Table " + self.name + " already exist")
+        else:
+            self.cursor.execute(
+                "CREATE TABLE {table_name} (id INT AUTO_INCREMENT PRIMARY KEY)".format(table_name=self.name))
+
+        self.columns = self.db.columns(self.name)
+
+
+
+    def insetInto(self, column, data):
+        self.cursor.execute(
+            "INSERT INTO {table_name} ({column_name}) VALUES (%s);".format(table_name=self.name, column_name=column),
+            (data.encode("utf-8"),))
+
+        self.db.commit()
+
+    def inset(self, columns, data):
+
+
+
+        self.cursor.execute("INSERT INTO {table_name} ({column_name}) VALUES (%s,%s,%s);".format\
+                                (table_name=str(self.name), column_name=str(columns)), (data[0], data[1], data[2]))
+
+        self.db.commit()
+
+
+    def addColumn(self, name, type):
+        print(self.db.columns(self.name))
+
+        if name in self.db.columns(self.name):
+            print("Column "+name+" already in table")
+        else:
+            print("Add column "+name+" to table "+self.name)
+            self.cursor.execute("ALTER TABLE {table_name} ADD COLUMN {column_name} {datatype};".format(table_name=self.name, column_name=name, datatype=type))
+
+        self.columns = self.db.columns(self.name)

@@ -15,7 +15,8 @@ tracker.setBorders(190, 360)
 
 class PeopleCounter(object):
     def __init__(self, src=0):
-        self.counter = 0
+        self.counter = 5
+        self.name = "home"
 
     def update(self):
 
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         # tracker.show()
 
         time.sleep(1)
-        dataJson = json.dumps({"right": 5, "left": 2})
+        dataJson = json.dumps({"name": str(peopleCounter.name), "counter": int(peopleCounter.counter)})
         com.send(dataJson)
         print('send')
 

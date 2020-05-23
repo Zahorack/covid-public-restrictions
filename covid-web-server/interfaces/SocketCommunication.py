@@ -8,7 +8,6 @@ import signal
 from threading import Thread
 from collections import namedtuple
 from people_counter import people_counter
-from interfaces import Database
 
 PORT  = 54321
 HOST = '161.35.29.46'
@@ -26,11 +25,8 @@ def newClientCommunication(client):
     while True:
 
         data = client.s_fd.recv(1024)
-        jsonData = json.loads(data)
 
-        print(jsonData)
-
-        # pc.update(data)
+        pc.update(data)
 
     client.s_fd.close()
 
@@ -48,11 +44,8 @@ class SocketCommunication(object):
 
 
     def initialize(self):
-        self.db = Database.Database()
-
         print("SocketCommunication init")
-        # self.db.createTable("test3")
-        self.db.addColumn("test3", "cislo", "VARCHAR(255)")
+
 
     def update(self):
         self.initialize()
