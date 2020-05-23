@@ -36,7 +36,7 @@ if __name__ == '__main__':
         # tracker.show()
 
         time.sleep(1)
-        dataJson = json.dumps({"right": 5, 'left': 2})
+        dataJson = json.dumps({"right": 5, "left": 2})
         com.send(dataJson)
         print('send')
 
