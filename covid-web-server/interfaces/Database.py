@@ -112,11 +112,8 @@ class Table(object):
 
     def inset(self, columns, data):
 
-
-
         self.cursor.execute("INSERT INTO {table_name} ({column_name}) VALUES (%s,%s,%s);".format\
                                 (table_name=str(self.name), column_name=str(columns)), (data[0], data[1], data[2]))
-
         self.db.commit()
 
 

@@ -9,7 +9,7 @@ from threading import Thread
 from collections import namedtuple
 from people_counter import people_counter
 
-PORT  = 54321
+PORT  = 5432
 HOST = '161.35.29.46'
 
 
@@ -23,9 +23,8 @@ def newClientCommunication(client):
 
     pc = people_counter.PeopleCounter()
     while True:
-
         data = client.s_fd.recv(1024)
-
+        print(data)
         pc.update(data)
 
     client.s_fd.close()
@@ -39,9 +38,6 @@ class SocketCommunication(object):
         self.threadList = list()
 
         signal.signal(signal.SIGINT, self.close)
-
-
-
 
     def initialize(self):
         print("SocketCommunication init")

@@ -4,7 +4,11 @@
 from datetime import datetime
 from interfaces import Database
 import json
-import time
+import time, os
+from private import clients
+
+os.environ['TZ'] = 'Europe/Bratislava'
+time.tzset()
 
 class PeopleCounter(object):
     def __init__(self):
@@ -30,20 +34,22 @@ class PeopleCounter(object):
         jsonData = json.loads(data)
         print(jsonData["name"])
 
-        if not self.name:
-            self.name = str(jsonData["name"])
-            self.initializeDatabase()
-        else:
-            # self.table.insetInto("data", str(jsonData["counter"]))
-            # self.table.insetInto("datum", str(time.strftime('%Y-%m-%d')))
-            # self.table.insetInto("cas", str(time.strftime('%H:%M:%S')))
+        if clients.hasValidKey(jsonData["name"], jsonData["key"]):
 
-            columns = str("datum, cas, data")
-            data = [ time.strftime('%Y-%m-%d'), str(time.strftime('%H:%M:%S')),str(jsonData["counter"]) ]
+            if not self.name:
+                self.name = str(jsonData["name"])
+                self.initializeDatabase()
+            else:
+                # self.table.insetInto("data", str(jsonData["counter"]))
+                # self.table.insetInto("datum", str(time.strftime('%Y-%m-%d')))
+                # self.table.insetInto("cas", str(time.strftime('%H:%M:%S')))
 
-            self.table.cursor.execute("INSERT INTO {table_name} ({column_name}) VALUES (%s,%s,%s);".format \
-                                    (table_name=str(self.name), column_name=str(columns)), (data[0], data[1], data[2]))
-            self.table.db.commit()
+                columns = str("datum, cas, data")
+                data = [time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'),jsonData["counter"]]
+
+                self.table.cursor.execute("INSERT INTO {table_name} ({column_name}) VALUES (%s,%s,%s);".format \
+                                        (table_name=str(self.name), column_name=str(columns)), (data[0], data[1], data[2]))
+                self.table.db.commit()
 
 
 

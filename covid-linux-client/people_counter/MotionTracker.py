@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 from people_counter import TrackingObject, MotionDetection
 import math
+import copy
 from collections import OrderedDict
-
 
 
 from people_counter.TrackingObject import TrackingObject
@@ -45,8 +45,6 @@ def isFoundInDirection(tracked, found):
 
 
 
-
-
 def isFoundInArea(tracked, found):
     if (tracked.area.x - tracked.area.w) < found.position.x < (tracked.area.x + tracked.area.w*2):
         return True
@@ -79,6 +77,10 @@ class MotionTracker(object):
     def setBorders(self, left, right):
         self.borders_left = left
         self.borders_right = right
+
+    def reset(self):
+        self.passed_right = 0
+        self.passed_left = 0
 
     def getValidContours(self, size):
         validContours = list()
@@ -130,7 +132,7 @@ class MotionTracker(object):
 
         print(usedContoursIndexes)
         # create list of unused contour
-        unusedContours = self.removeComponentsFromListByIndex(validContours.copy(), usedContoursIndexes)
+        unusedContours = self.removeComponentsFromListByIndex(copy.copy(validContours), usedContoursIndexes)
 
         #create new trackers from unused contours
         for contour in unusedContours:
@@ -145,7 +147,8 @@ class MotionTracker(object):
         iterator = 0
         if len(that_list) > 0:
             for index in components:
-                del that_list[index - iterator]
+                if abs(index - iterator) < len(that_list):
+                    del that_list[index - iterator]
                 iterator += 1
 
         return that_list
