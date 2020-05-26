@@ -7,7 +7,7 @@ import json
 import signal
 
 HOST = '161.35.29.46'
-PORT = 5432
+PORT = 54321
 
 
 class SocketCommunication(object):

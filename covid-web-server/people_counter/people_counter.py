@@ -45,10 +45,10 @@ class PeopleCounter(object):
                 # self.table.insetInto("cas", str(time.strftime('%H:%M:%S')))
 
                 columns = str("datum, cas, data")
-                data = [time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'),jsonData["counter"]]
+                data = json.dumps({"date": str(time.strftime('%Y-%m-%d')), "time":str(time.strftime('%H:%M:%S')), "counter": str(jsonData["counter"])})
 
                 self.table.cursor.execute("INSERT INTO {table_name} ({column_name}) VALUES (%s,%s,%s);".format \
-                                        (table_name=str(self.name), column_name=str(columns)), (data[0], data[1], data[2]))
+                                        (table_name=str(self.name), column_name=str(columns)), (time.strftime('%Y-%m-%d'), time.strftime('%H:%M:%S'), data))
                 self.table.db.commit()
 
 

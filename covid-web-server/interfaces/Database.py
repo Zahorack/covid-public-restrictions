@@ -4,31 +4,38 @@
 import mysql.connector
 from private import access
 
-database= mysql.connector.connect(
-    host = access.database_host,
-    user = access.database_user,
-    passwd = access.database_password,
-    database = access.database_name
-)
-
 
 class Database(object):
     def __init__(self):
-        self.cursor = database.cursor()
+        self.database = mysql.connector.connect(
+            host=access.database_host,
+            user=access.database_user,
+            passwd=access.database_password,
+            database=access.database_name
+        )
+
+        self.cursor = self.database.cursor()
 
         print("SHOW TABLES")
         self.cursor.execute("SHOW TABLES")
         for x in self.cursor:
             print(x)
 
+    def __del__(self):
+        self.close()
+
+    def close(self):
+        print("Close database")
+        self.database.close()
+
     def commit(self):
-        database.commit()
+        self.database.commit()
 
     def insetInto(self, table, column, data):
-        self.cursor = database.cursor()
+        self.cursor = self.database.cursor()
 
         self.cursor.execute("INSERT INTO {table_name} ({column_name}) VALUES (%s);".format(table_name=table, column_name=column), (data.encode("utf-8"),))
-        database.commit()
+        self.database.commit()
 
 
     def tables(self):
@@ -88,6 +95,8 @@ class Table(object):
         self.name = str()
         self.id = 0
 
+    def __del__(self):
+        self.db.close()
 
     def getId(self):
         self.cursor.execute("SELECT MAX(id) FROM {table_name}".format(table_name=self.name))
@@ -165,10 +174,13 @@ class Table(object):
         print(sql)
         self.cursor.execute(sql)
 
-        myresult = self.cursor.fetchall()
-        # for x in myresult:
-        #     print(x)
-        return  myresult
+        fetch = self.cursor.fetchall()
+        result = []
+
+        for x in  fetch:
+            # x = x[0].encode()
+            result.append(x[0].encode())
+        return  result
 
     def selectWhere(self, column, item):
         sql = "SELECT * FROM {table_name} WHERE {column_name} = '{item_name}'".format(table_name=self.name, column_name=column, item_name=item)
