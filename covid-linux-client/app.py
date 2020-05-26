@@ -15,8 +15,8 @@ def minutes():
 class PeopleCounter(object):
     def __init__(self, src=0):
         self.counter = 0
-        self.name = "shop"
-        self.unique_key = "QDR84IGV"
+        self.name = "home"
+        self.unique_key = "KL56M49Q"
         self.countingDirection = 'left'
 
         # stream = Camera.Camera('data/output4.avi')
