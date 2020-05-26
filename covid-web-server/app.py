@@ -39,6 +39,16 @@ def design2():
 def design3():
     return render_template('design3.html')
 
+
+@app.route('/database/<table>', methods=['GET', 'POST'])
+def database(table):
+    tb = Database.Table()
+    print(str(table))
+    tb.initialise(str(table))
+    data = tb.selectWhere("datum", datetime.datetime.today().utcnow().date())
+
+    return str(data)
+
 # @socketio.on('disconnect_request', namespace='/test')
 # def disconnect_request():
 #     session['receive_count'] = session.get('receive_count', 0) + 1
@@ -52,12 +62,10 @@ if __name__ == '__main__':
     # com_thread = Thread(target=com.update, args=())
     # com_thread.start()
 
-    # db.selectTable("shop")
-    table.create("shop")
-    # table.selectColumn("id")
+
+    table.initialise("shop")
     table.selectWhere("data", "5")
-    # table.selectWhere("cas", "10:03:00")
-    table.selectWhere("datum", datetime.date(2020, 5, 26))
+    table.selectWhere("datum", datetime.datetime.today().utcnow().date())
 
     socketio.run(app, host="0.0.0.0", port=80, debug=True)
     # thread.start_new_thread(app.run, ("0.0.0.0", 80))

@@ -114,6 +114,15 @@ class Table(object):
         self.columns = self.db.columns(self.name)
 
 
+    def initialise(self, name):
+        self.name = str(name)
+
+        if self.exist():
+            self.columns = self.db.columns(self.name)
+            return True
+
+        return False
+
 
     def insetInto(self, column, data):
         self.cursor.execute(
@@ -167,6 +176,6 @@ class Table(object):
         self.cursor.execute(sql)
 
         myresult = self.cursor.fetchall()
-        for x in myresult:
-            print(x)
+        # for x in myresult:
+        #     print(x)
         return  myresult
