@@ -68,6 +68,18 @@ class Database(object):
             self.cursor.execute("ALTER TABLE {table_name} ADD COLUMN {column_name} {datatype};".format(table_name=table, column_name=name, datatype=type))
 
 
+    def selectTable(self, table):
+        print("Select from " + table)
+        sql = "SELECT * FROM {table_name}".format(table_name=table)
+
+        self.cursor.execute(sql)
+        myresult = self.cursor.fetchall()
+
+        # for x in myresult:
+        #     print(x)
+
+        return myresult
+
 
 class Table(object):
     def __init__(self):
@@ -127,3 +139,34 @@ class Table(object):
             self.cursor.execute("ALTER TABLE {table_name} ADD COLUMN {column_name} {datatype};".format(table_name=self.name, column_name=name, datatype=type))
 
         self.columns = self.db.columns(self.name)
+
+
+    def select(self):
+        sql = "SELECT * FROM {table_name}".format(table_name=self.name)
+        print(sql)
+        self.cursor.execute(sql)
+        myresult = self.cursor.fetchall()
+        # for x in myresult:
+        #     print(x)
+        return myresult
+
+
+    def selectColumn(self, column):
+        sql = "SELECT {column_name} FROM {table_name}".format(table_name=self.name, column_name=column)
+        print(sql)
+        self.cursor.execute(sql)
+
+        myresult = self.cursor.fetchall()
+        # for x in myresult:
+        #     print(x)
+        return  myresult
+
+    def selectWhere(self, column, item):
+        sql = "SELECT * FROM {table_name} WHERE {column_name} = '{item_name}'".format(table_name=self.name, column_name=column, item_name=item)
+        print(sql)
+        self.cursor.execute(sql)
+
+        myresult = self.cursor.fetchall()
+        for x in myresult:
+            print(x)
+        return  myresult

@@ -3,10 +3,12 @@
 
 from threading import Thread
 from flask import Flask, render_template,session, request
-from interfaces import SocketCommunication
+from interfaces import SocketCommunication, Database
 from flask_socketio import SocketIO, emit, disconnect
+import time, datetime
 
-
+db = Database.Database()
+table = Database.Table()
 
 app = Flask(__name__)
 
@@ -46,14 +48,21 @@ def design3():
 
 
 if __name__ == '__main__':
-    com = SocketCommunication.SocketCommunication()
-    com_thread = Thread(target=com.update, args=())
-    com_thread.start()
+    # com = SocketCommunication.SocketCommunication()
+    # com_thread = Thread(target=com.update, args=())
+    # com_thread.start()
+
+    # db.selectTable("shop")
+    table.create("shop")
+    # table.selectColumn("id")
+    table.selectWhere("data", "5")
+    # table.selectWhere("cas", "10:03:00")
+    table.selectWhere("datum", datetime.date(2020, 5, 26))
 
     socketio.run(app, host="0.0.0.0", port=80, debug=True)
     # thread.start_new_thread(app.run, ("0.0.0.0", 80))
 
-    com_thread.join()
+    # com_thread.join()
 
 
 
