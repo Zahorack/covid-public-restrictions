@@ -7,11 +7,17 @@ from interfaces import SocketCommunication, Database
 from flask_socketio import SocketIO, emit, disconnect
 import time, datetime
 import json
+import os
 
+from OpenSSL import SSL
+# context = SSL.Context(SSL.TLSv1_2_METHOD)
+# context.use_privatekey_file('example.key')
+# context.use_certificate_file('example.crt')
 
 app = Flask(__name__)
 
 socketio = SocketIO(app, async_mode=None)
+
 
 @app.route('/')
 def home():
@@ -62,24 +68,30 @@ def select_tables():
     print("web request for tables")
     tables = db.tables()
     print(tables)
-
-    return json.dumps((tables))
+    #
+    return json.dumps(tables)
 
 
 if __name__ == '__main__':
-    com = SocketCommunication.SocketCommunication()
-    com_thread = Thread(target=com.update, args=())
-    com_thread.start()
+    # com = SocketCommunication.SocketCommunication()
+    # com_thread = Thread(target=com.update, args=())
+    # com_thread.start()
 
 
     # table.initialise("shop")
     # table.selectWhere("data", "5")
     # table.selectWhere("datum", datetime.datetime.today().utcnow().date())
 
-    socketio.run(app, host="0.0.0.0", port=80, debug=True)
+
+    # socketio.run(app, host="0.0.0.0", port=80, debug=True)
+
+    # app.run(host="0.0.0.0", port=80, debug=True, ssl_context=('/etc/letsencrypt/live/rholly.sk/fullchain.pem', '/etc/letsencrypt/live/rholly.sk/privkey.pem'), threaded=True)
+    app.run(host="0.0.0.0", port=80, debug=True)
+
+
     # thread.start_new_thread(app.run, ("0.0.0.0", 80))
 
-    com_thread.join()
+    # com_thread.join()
 
 
 

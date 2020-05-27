@@ -179,7 +179,7 @@ class Table(object):
 
         for x in  fetch:
             # x = x[0].encode()
-            result.append(x[0].encode())
+            result.append(x[0])
         return  result
 
     def selectWhere(self, column, item):
