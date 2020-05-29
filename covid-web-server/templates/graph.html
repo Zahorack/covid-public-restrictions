@@ -118,6 +118,8 @@
 
         console.log("Data size")
         console.log(data.length)
+        
+        $('#log').empty()
       for(var i = 0; i < data.length; i++) {
           // $('#log').append(+ data[i] +'<br>').html();
           $('#log').append(JSON.stringify(data[i]) +'<br>').html();
