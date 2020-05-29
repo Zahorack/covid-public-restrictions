@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/style_graph.css">
+       <script src="static/libs/gauge.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../static/stylesheets/jquery-ui.min.css">
     <title>Covid public restrictions</title>
     <style type="text/css">
@@ -19,20 +20,66 @@
     var selectedDate;
     var tables;
     var dates;
+    var gauge;
 
    $(document).ready(function(){
         selectedTable = 'home'
         selectedDate = 'today'
 
+        initGauge()
         updateDates()
         updateTables()
 
         getData()
 
+
    });  //Documnt ready
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function initGauge() {
+              gauge = new RadialGauge({
+              renderTo: 'canvasID',
+              width: 300,
+              height: 300,
+              units: "people counter",
+              minValue: 0,
+              maxValue: 10,
+              majorTicks: [
+                  "0",
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "6",
+                  "7",
+                  "8",
+                  "9",
+                  "10"
+              ],
+              minorTicks: 2,
+              strokeTicks: true,
+              highlights: [
+                  {
+                      "from": 8,
+                      "to": 10,
+                      "color": "rgba(200, 50, 50, .75)"
+                  }
+              ],
+              colorPlate: "#fff",
+              borderShadowWidth: 0,
+              borders: false,
+              needleType: "arrow",
+              needleWidth: 2,
+              needleCircleSize: 7,
+              needleCircleOuter: true,
+              needleCircleInner: false,
+              animationDuration: 1500,
+              animationRule: "linear"
+          });
     }
 
     function updateDates() {
@@ -118,12 +165,19 @@
 
         console.log("Data size")
         console.log(data.length)
-        
+
+        //list log to html
         $('#log').empty()
-      for(var i = 0; i < data.length; i++) {
-          // $('#log').append(+ data[i] +'<br>').html();
-          $('#log').append(JSON.stringify(data[i]) +'<br>').html();
-      }
+          for(var i = 0; i < data.length; i++) {
+              $('#log').append(JSON.stringify(data[i]) +'<br>').html();
+          }
+
+        // Cauge update
+        console.log("gauge update")
+        console.log(data[data.length-1].counter)
+        gauge.value = data[data.length-1].counter.toString()
+        // gauge.set(data[data.length-1].counter.toString())
+        gauge.draw()
 
         console.log(data);
         n = Object.keys(data).length;
@@ -168,6 +222,7 @@
           success:function(data)
           {
               drawGraph(data)
+
           }
         }).done(function( o ) {
 
@@ -201,6 +256,9 @@
         });
       } );
 
+
+
+
   </script>
 </head>
 
@@ -229,7 +287,8 @@
       <ul>
         <li><a href="#tabs-1">Bar</a></li>
         <li><a href="#tabs-2">Plot</a></li>
-        <li><a href="#tabs-3">Raw</a></li>
+        <li><a href="#tabs-3">Gauge</a></li>
+        <li><a href="#tabs-4">Raw</a></li>
       </ul>
 
       <div id="tabs-1">
@@ -243,18 +302,15 @@
              <div id="plotdiv2" style="width:600px;height:250px;"></div>
       </div>
 
-
       <div id="tabs-3">
+          <h1>Plot</h1>
+          <canvas id="canvasID"></canvas>
+<!--             <div id="plotdiv2" style="width:600px;height:250px;"></div>-->
+      </div>
+
+      <div id="tabs-4">
         <h1>Raw data from database</h1>
         <div id="log"></div>
-<!--          <h2>Send:</h2>-->
-<!--          <form id="emit3" method="POST" action='#'>-->
-<!--            <input type="text" name="emit_value3" id="emit_value3" placeholder="Amplituda != 1">-->
-<!--            <input type="text" name="emit_omega3" id="emit_omega3" placeholder="Omega">-->
-<!--            <input type="submit" value="Send">-->
-<!--          </form>-->
-
-<!--          <canvas id="canvasID"></canvas>-->
       </div>
     </div>
 
