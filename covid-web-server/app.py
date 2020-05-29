@@ -8,6 +8,9 @@ from flask_socketio import SocketIO, emit, disconnect
 import time, datetime
 import json
 import os
+import socket
+
+
 
 from OpenSSL import SSL
 # context = SSL.Context(SSL.TLSv1_2_METHOD)
@@ -62,6 +65,24 @@ def database(table):
 
     return  "Database does not exist"
 
+
+@app.route('/database/<table>/<date>', methods=['GET', 'POST'])
+def database_by_date(table, date):
+    tb = Database.Table()
+    print(str(table))
+    if tb.initialise(str(table)):
+        print(date)
+        # data = tb.selectWhere("datum", datetime.datetime.today().utcnow().date())
+        if date == 'today':
+            date = datetime.datetime.today().utcnow().date()
+        data = tb.selectColumnWhere("data", "datum", date)
+        print(data)
+        my_string = ','.join(map(str, data))
+
+        return str("["+my_string+"]")
+
+    return  "Database does not exist"
+
 @app.route('/tables', methods=['GET', 'POST'])
 def select_tables():
     db = Database.Database()
@@ -71,24 +92,36 @@ def select_tables():
     #
     return json.dumps(tables)
 
+@app.route('/dates/<table>', methods=['GET', 'POST'])
+def select_dates(table):
+    tb = Database.Table()
+    print(str(table))
+    if tb.initialise(str(table)):
+        # data = tb.selectWhere("datum", datetime.datetime.today().utcnow().date())
+        dates = tb.selectColumn("datum")
+        dates = list(dict.fromkeys(dates))
+
+        result = []
+        for date in dates:
+            result.append(str(date))
+
+        print(dates)
+        # my_string = ','.join(map(str, data))
+
+        return json.dumps(result)
+
+    return  "Database does not exist"
+
 
 if __name__ == '__main__':
-    # com = SocketCommunication.SocketCommunication()
-    # com_thread = Thread(target=com.update, args=())
-    # com_thread.start()
 
-
-    # table.initialise("shop")
-    # table.selectWhere("data", "5")
-    # table.selectWhere("datum", datetime.datetime.today().utcnow().date())
+    com = SocketCommunication.SocketCommunication()
+    com_thread = Thread(target=com.update, args=())
+    com_thread.start()
 
 
     # socketio.run(app, host="0.0.0.0", port=80, debug=True)
-
-    # app.run(host="0.0.0.0", port=80, debug=True, ssl_context=('/etc/letsencrypt/live/rholly.sk/fullchain.pem', '/etc/letsencrypt/live/rholly.sk/privkey.pem'), threaded=True)
-    app.run(host="0.0.0.0", port=80, debug=True)
-
-
+    app.run(host="0.0.0.0", port=80, debug=True, ssl_context=("example.crt", "example.key"))
     # thread.start_new_thread(app.run, ("0.0.0.0", 80))
 
     # com_thread.join()

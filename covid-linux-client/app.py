@@ -3,6 +3,7 @@
 
 import json
 import time
+import socket
 from people_counter import MotionTracker, Camera
 from interfaces import SocketCommunication
 
@@ -15,11 +16,11 @@ def minutes():
 class PeopleCounter(object):
     def __init__(self, src=0):
         self.counter = 0
-        self.name = "home"
-        self.unique_key = "KL56M49Q"
+        self.name = "shop"
+        self.unique_key = "QDR84IGV"
         self.countingDirection = 'left'
 
-        # stream = Camera.Camera('data/output4.avi')
+        # self.stream = Camera.Camera('data/output4.avi')
         self.stream = Camera.Camera(0)
 
         self.tracker = MotionTracker.MotionTracker()
@@ -29,6 +30,7 @@ class PeopleCounter(object):
 
         self.last_send = 0
         self.last_counter = 0
+
 
     def send(self):
         print("send")

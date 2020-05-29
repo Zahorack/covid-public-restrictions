@@ -9,7 +9,7 @@ from threading import Thread
 from collections import namedtuple
 from people_counter import people_counter
 
-PORT  = 54321
+PORT  = 5432
 HOST = '161.35.29.46'
 
 

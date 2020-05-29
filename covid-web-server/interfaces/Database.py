@@ -191,3 +191,18 @@ class Table(object):
         # for x in myresult:
         #     print(x)
         return  myresult
+
+
+
+    def selectColumnWhere(self, column, where, item):
+        sql = "SELECT {column_name} FROM {table_name}  WHERE {where_name} = '{item_name}'".format(table_name=self.name, column_name=column, item_name=item, where_name = where)
+        print(sql)
+        self.cursor.execute(sql)
+
+        fetch = self.cursor.fetchall()
+        result = []
+
+        for x in  fetch:
+            # x = x[0].encode()
+            result.append(x[0])
+        return  result
