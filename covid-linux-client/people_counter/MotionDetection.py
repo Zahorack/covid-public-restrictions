@@ -49,6 +49,10 @@ class MotionDetection(object):
 
 
         cv2.imshow('dilated', dilated)
+        # cv2.imshow('diff1', diff1)
+        # cv2.imshow('diff2', diff2)
+        cv2.imshow('gray1', gray1)
+        # cv2.imshow('gray2', gray2)
 
         _,contours, _ = cv2.findContours(dilated, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         # _,contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

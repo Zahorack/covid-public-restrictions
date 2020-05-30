@@ -302,6 +302,7 @@ class MotionTracker(object):
                 continue
 
             # cv2.circle(self.frame, object.getPosition(), 2, (0, 0, 255), 2)
+
             cv2.rectangle(self.frame, object.getAreaBegin(), object.getAreaEnd(), (0, 255, 0), 2)
 
 

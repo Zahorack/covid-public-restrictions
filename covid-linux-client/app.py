@@ -20,8 +20,8 @@ class PeopleCounter(object):
         self.unique_key = "QDR84IGV"
         self.countingDirection = 'left'
 
-        # self.stream = Camera.Camera('data/output4.avi')
-        self.stream = Camera.Camera(0)
+        self.stream = Camera.Camera('data/output4.avi')
+        # self.stream = Camera.Camera(0)
 
         self.tracker = MotionTracker.MotionTracker()
         self.tracker.setBorders(190, 360)
@@ -42,6 +42,7 @@ class PeopleCounter(object):
     def update(self):
         frame = self.stream.read()
 
+        input("next frame")
         self.tracker.update(frame)
         self.tracker.show()
 
